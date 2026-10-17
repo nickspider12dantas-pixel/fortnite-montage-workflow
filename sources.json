@@ -1,5 +1,5 @@
 {
-  "notice": "These are source-page links supplied by the user. They are references only, not downloadable video files. Before rendering, use authorized original video files or direct media URLs from the creators, and confirm rights to edit and repost.",
+  "notice": "Source-page links are references only, not downloadable video files. The creator handles below are intended for visible attribution. Before rendering, use authorized original video files or direct media URLs and confirm permission to edit and repost.",
   "clips": [
     {
       "source_page": "https://www.youtube.com/shorts/_1mEgm3PXDQ",
@@ -20,6 +20,16 @@
       "source_page": "https://www.youtube.com/shorts/2K9SLY15Z-o",
       "url": "",
       "approved": false
+    }
+  ],
+  "creator_credits": [
+    {
+      "handle": "@realfaxfortnite",
+      "channel": "https://www.youtube.com/@RealFaxFortnite"
+    },
+    {
+      "handle": "@InstrumentalRemake",
+      "channel": "https://www.youtube.com/@InstrumentalRemake/shorts"
     }
   ]
 }
