@@ -39,6 +39,14 @@ For the AutoClip route, edit `sources.json` to include at least one approved HTT
 
 Replace the example with your own actual unlisted video URL and your real handle. This is a template, not a real video. AutoClip may use quota; check the service's pricing and usage limits before opting in. The workflow will not submit jobs unless you manually choose `run_autoclip: true`.
 
+### Fortnite fan-content notice
+
+Epic's [Fan Content Policy](https://legal.epicgames.com/epicgames/fan-art-policy) requires a disclaimer in or in connection with fan content and says it must not appear official or imply Epic endorsement. When posting the montage, include this exact disclaimer in the TikTok caption/description:
+
+> Portions of the materials used are trademarks and/or copyrighted works of Epic Games, Inc. All rights reserved by Epic. This material is not official and is not endorsed by Epic.
+
+Use your own gameplay or footage you have permission to edit and repost. Epic's policy is generally for non-commercial fan content, with a limited exception for ad-monetized web videos; do not assume that every TikTok monetization program is covered. Check the current policy before monetizing.
+
 ### Music
 
 1. Suggested candidate: [“Big Bitty (Techno | Dubstep | EDM | Electronic Music)” by firemansuperhero](https://pixabay.com/music/electronic-big-bitty-techno-dubstep-edm-electronic-music-121803/). Its page describes energetic electronic music and says the composer releases music under a Creative Commons Attribution license with no Content ID. It asks users to credit FIREMAN. Re-check the current page and terms before use; this is not a guarantee against TikTok muting or claims.
