@@ -61,3 +61,21 @@ Trending TikTok library sounds cannot be reliably embedded by this workflow. Add
 ## Free runner notes
 
 GitHub Actions has usage and artifact limits; review your account's current Actions usage and billing settings. This workflow has a 25-minute job timeout and limits each downloaded media file to 180 MB.
+
+## Free AI-assisted highlight finder (local footage)
+
+A free helper script can rank candidate high-action moments from a local gameplay recording. It uses frame-to-frame visual motion as a heuristic; it does **not** reliably recognize kills or guarantee every moment is a highlight, so review the timestamps.
+
+Install Python dependencies once:
+
+```bash
+python -m pip install -r requirements-highlights.txt
+```
+
+Run it on gameplay you recorded or are authorized to edit:
+
+```bash
+python scripts/find_highlights.py gameplay.mp4 --top 8 --clip-seconds 7
+```
+
+It writes `highlights.json` with suggested start times and motion scores. This helper runs locally for free and does not upload the video anywhere. It is separate from the GitHub Actions renderer, which still needs authorized direct media URLs and licensed music configured in `sources.json` and `music.json`.
