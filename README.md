@@ -5,7 +5,8 @@ This repository contains a GitHub Actions workflow that uses FFmpeg to build a v
 ## Current status
 
 - The daily workflow and FFmpeg builder are installed.
-- The workflow is **not ready to render a video yet** because `sources.json` contains no clips and `music.json` has no licensed music URL.
+- The workflow is **not ready to render a video yet** because no authorized gameplay sources or licensed music file have been added.
+- AutoClip is now opt-in only for a manual run. The default is OFF, and the scheduled workflow never submits AutoClip jobs.
 - It does not publish directly to TikTok or automatically select trending TikTok sounds.
 - The output is saved as a GitHub Actions artifact for 7 days after a successful run.
 
@@ -15,33 +16,37 @@ The GitHub Actions workflow now submits approved source videos to AutoClip, poll
 
 The integration uses `https://polished-turtle-977.convex.site` and the documented `POST /api/v1/jobs`, `GET /api/v1/jobs/{id}`, and `GET /api/v1/jobs/{id}/clips` endpoints. AutoClip's presigned download URLs may expire after one hour, so the workflow downloads them immediately. Each source is limited to two clips and the montage uses up to six clips total.
 
-Before a source is submitted, set its `approved` value to `true` only if you have permission to submit that video to AutoClip and to edit/repost the resulting clips. The existing four source entries are still `approved: false`, so the workflow will stop safely until you confirm rights for the sources you intend to use. AutoClip may consume account quota or incur charges depending on your plan; check your account's limits before running the workflow. The workflow does not publish to TikTok.
+AutoClip may consume account quota or incur charges depending on your plan. To prevent accidental usage, the workflow only calls AutoClip when you manually run it and turn on the `run_autoclip` input; that input defaults to false. The scheduled workflow never calls AutoClip. Do not turn it on until you have checked pricing/quotas and configured your own gameplay or footage whose owner explicitly gave permission. The workflow does not publish to TikTok.
 
-## Add authorized footage and music
+## Add your own gameplay footage and music
 
-Edit `sources.json` and provide at least two direct HTTPS video-file URLs. Set `approved` to `true` only after you have permission to download, edit, and repost each clip:
+The previously listed third-party Shorts were removed from the active source list because permission has not been confirmed. The safest starting point is your own Fortnite gameplay recording. You can record a match, upload the recording you own to YouTube as **Unlisted**, then add that video URL to `sources.json` and set `approved: true` only after checking that you have the rights needed to submit it to AutoClip and edit/repost the output. Use your own handle in `creator`. Do not use other creators' Shorts unless they explicitly permit this use.
+
+For the AutoClip route, edit `sources.json` to include at least one approved HTTPS source URL. Example structure:
 
 ```json
 {
   "clips": [
-    {"url": "https://your-authorized-host.example/clip1.mp4", "approved": true, "creator": "@realfaxfortnite"},
-    {"url": "https://your-authorized-host.example/clip2.mp4", "approved": true, "creator": "@InstrumentalRemake"}
+    {
+      "source_page": "https://www.youtube.com/watch?v=YOUR_OWN_VIDEO_ID",
+      "url": "",
+      "approved": true,
+      "creator": "@yourhandle"
+    }
   ]
 }
 ```
 
-Replace the example URLs with actual direct media-file URLs. Set each clip’s `creator` to the correct handle for that exact clip; the video overlay will show only that creator as `Clip by @handle`. Do not guess the creator mapping. A YouTube watch/Shorts page is not a direct video file and will not work. Use files supplied by the footage owner or official download/export methods you are authorized to use. Permission for the video footage does not automatically clear music embedded in it.
+Replace the example with your own actual unlisted video URL and your real handle. This is a template, not a real video. AutoClip may use quota; check the service's pricing and usage limits before opting in. The workflow will not submit jobs unless you manually choose `run_autoclip: true`.
 
-Edit `music.json` to add a direct download URL for music licensed for use in your TikTok post:
+### Music
 
-```json
-{
-  "music_url": "https://your-authorized-host.example/track.mp3",
-  "license_note": "License or source details"
-}
-```
+1. Open [YouTube Studio Audio Library](https://youtube.com/audiolibrary) and download a track. Prefer “Attribution not required” if you want to avoid a credit requirement on YouTube.
+2. Check the track's terms before using it on TikTok; do not assume a YouTube-specific license covers every platform.
+3. Add the downloaded MP3 to the repository at `assets/music.mp3`.
+4. Edit `music.json` and fill `license_note` with the track title, artist, source, and license/terms. Do not leave the note blank.
 
-Do not place passwords, API tokens, or other secrets in these public files.
+The montage builder can use that local MP3 file, so no public direct music URL is required. Keep music files within license terms and do not commit a track if its license does not permit this use.
 
 ## Run the workflow
 
