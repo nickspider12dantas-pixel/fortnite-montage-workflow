@@ -15,7 +15,10 @@ MAX_DOWNLOAD_BYTES = 180 * 1024 * 1024
 
 
 def read_json(name):
-    path = Path(name)\n    if not path.is_absolute():\n        path = ROOT / path\n    with path.open("r", encoding="utf-8") as f:
+    path = Path(name)
+    if not path.is_absolute():
+        path = ROOT / path
+    with path.open("r", encoding="utf-8") as f:
         return json.load(f)
 
 
