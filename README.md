@@ -41,12 +41,12 @@ Replace the example with your own actual unlisted video URL and your real handle
 
 ### Music
 
-1. Open [YouTube Studio Audio Library](https://youtube.com/audiolibrary) and download a track. Prefer “Attribution not required” if you want to avoid a credit requirement on YouTube.
-2. Check the track's terms before using it on TikTok; do not assume a YouTube-specific license covers every platform.
-3. Add the downloaded MP3 to the repository at `assets/music.mp3`.
-4. Edit `music.json` and fill `license_note` with the track title, artist, source, and license/terms. Do not leave the note blank.
+1. Browse [Pixabay Music](https://pixabay.com/music/) and select a track whose individual track page and license permit use in social-media videos. Read the official [Pixabay license](https://pixabay.com/service/license-summary/) and the uploader's notes for the specific track.
+2. Avoid tracks marked as Content ID registered if you want fewer automated copyright-claim complications. A free license does not guarantee TikTok will never mute or flag a track.
+3. Download the MP3 from the official Pixabay track page and add it to the repository at `assets/music.mp3`.
+4. Edit `music.json` and fill `license_note` with the track title, artist, source URL, and license/terms. Do not leave the note blank. Keep a copy of the track page or license details.
 
-The montage builder can use that local MP3 file, so no public direct music URL is required. Keep music files within license terms and do not commit a track if its license does not permit this use.
+The montage builder can use that local MP3 file, so no public direct music URL is required. Do not upload a track if its page or license restricts your intended use.
 
 ## Run the workflow
 
