@@ -2,6 +2,12 @@ name: Daily Fortnite montage
 
 on:
   workflow_dispatch:
+    inputs:
+      run_autoclip:
+        description: "Submit approved footage to AutoClip (may use quota; default is off)"
+        required: true
+        type: boolean
+        default: false
   schedule:
     # 5:30 PM America/New_York is 21:30 UTC during daylight time.
     # GitHub cron is UTC, so this shifts by an hour when DST changes.
@@ -33,14 +39,15 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Generate clips with AutoClip
+      - name: Generate clips with AutoClip (explicit opt-in only)
+        if: github.event_name == 'workflow_dispatch' && inputs.run_autoclip == true
         env:
           AUTOCLIP_API_KEY: ${{ secrets.AUTOCLIP_API_KEY }}
         run: python scripts/autoclip_fetch.py
 
       - name: Build montage
         env:
-          MONTAGE_SOURCES_FILE: output/autoclip_sources.json
+          MONTAGE_SOURCES_FILE: ${{ github.event_name == 'workflow_dispatch' && inputs.run_autoclip == true && 'output/autoclip_sources.json' || 'sources.json' }}
         run: python scripts/build_montage.py
 
       - name: Upload finished montage
