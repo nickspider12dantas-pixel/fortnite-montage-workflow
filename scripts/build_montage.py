@@ -62,7 +62,12 @@ def escape_drawtext(text):
 def main():
     source_config = read_json(os.environ.get("MONTAGE_SOURCES_FILE", "sources.json"))
     music_config = read_json("music.json")
-    clips = source_config.get("clips", [])
+    raw_clips = source_config.get("clips", [])
+    if not isinstance(raw_clips, list):
+        raise ValueError("sources.json must contain a clips list.")
+    # Ignore entries that have not been explicitly approved. This keeps draft/unapproved
+    # entries from blocking a montage made from other authorized clips.
+    clips = [clip for clip in raw_clips if isinstance(clip, dict) and clip.get("approved") is True]
     music_url = music_config.get("music_url", "").strip()
     music_file = music_config.get("music_file", "").strip()
     music_path = None
@@ -110,7 +115,8 @@ def main():
             raise ValueError(
                 f"Clip {i} needs approved=true only after verifying permission to download, edit, and repost it."
             )
-        creator = clip.get("creator", "").strip()
+        creator_value = clip.get("creator", "")
+        creator = creator_value.strip() if isinstance(creator_value, str) else ""
         if not creator.startswith("@") or len(creator) > 31 or not creator[1:].replace(".", "").replace("_", "").replace("-", "").isalnum():
             raise ValueError(f"Clip {i} needs the correct creator handle, such as your own @handle.")
 
