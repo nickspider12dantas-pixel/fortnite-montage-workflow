@@ -1,4 +1,15 @@
 {
-  "notice": "Use only direct HTTPS URLs to video files you own or have explicit permission to download and edit. A YouTube watch/shorts page is not a direct media file URL.",
-  "clips": []
+  "notice": "These are the two source-page links supplied by the user. They are references only, not downloadable video files. Ask the creator for authorized original video files or direct media URLs before rendering.",
+  "clips": [
+    {
+      "source_page": "https://www.youtube.com/shorts/_1mEgm3PXDQ",
+      "url": "",
+      "approved": false
+    },
+    {
+      "source_page": "https://www.youtube.com/shorts/Jv-SULBwbV0",
+      "url": "",
+      "approved": false
+    }
+  ]
 }
