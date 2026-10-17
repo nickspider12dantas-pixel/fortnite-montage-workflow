@@ -19,17 +19,26 @@ The integration uses `https://polished-turtle-977.convex.site` and the documente
 
 AutoClip may consume account quota or incur charges depending on your plan. To prevent accidental usage, the workflow only calls AutoClip when you manually run it and turn on the `run_autoclip` input; that input defaults to false. The scheduled workflow never calls AutoClip. Do not turn it on until you have checked pricing/quotas and configured your own gameplay or footage whose owner explicitly gave permission. The workflow does not publish to TikTok.
 
-## Add your own gameplay footage and music
+## Add your own gameplay footage
 
-The previously listed third-party Shorts were removed from the active source list because permission has not been confirmed. The safest starting point is your own Fortnite gameplay recording. You can record a match, upload the recording you own to YouTube as **Unlisted**, then add that video URL to `sources.json` and set `approved: true` only after checking that you have the rights needed to submit it to AutoClip and edit/repost the output. Use your own handle in `creator`. Do not use other creators' Shorts unless they explicitly permit this use.
+The no-paid-API route is to use clips you recorded yourself. Upload two or more short clips to the repository under `assets/` (for example, `assets/gameplay1.mp4` and `assets/gameplay2.mp4`), then add entries to `sources.json`. GitHub's browser uploader has file-size limits, so keep each clip small or use direct HTTPS links to files you own and are authorized to edit. Do not upload other creators' videos without permission.
 
-For the AutoClip route, edit `sources.json` to include at least one approved HTTPS source URL. Example structure:
+Example for two local clips:
 
 ```json
 {
+  "notice": "My own recorded Fortnite gameplay.",
   "clips": [
     {
-      "source_page": "https://www.youtube.com/watch?v=YOUR_OWN_VIDEO_ID",
+      "file": "assets/gameplay1.mp4",
+      "start_seconds": 0,
+      "url": "",
+      "approved": true,
+      "creator": "@yourhandle"
+    },
+    {
+      "file": "assets/gameplay2.mp4",
+      "start_seconds": 0,
       "url": "",
       "approved": true,
       "creator": "@yourhandle"
@@ -38,7 +47,10 @@ For the AutoClip route, edit `sources.json` to include at least one approved HTT
 }
 ```
 
-Replace the example with your own actual unlisted video URL and your real handle. This is a template, not a real video. AutoClip may use quota; check the service's pricing and usage limits before opting in. The workflow will not submit jobs unless you manually choose `run_autoclip: true`.
+Replace the example filenames and handle with your real files and account. The renderer can also take multiple entries pointing to the same local recording with different `start_seconds` values, letting you choose different moments from a longer gameplay video. Use a local clip only if you own it or have permission to edit and repost it. Set `approved: true` only after confirming that permission.
+
+An alternative is AutoClip: put your own authorized Unlisted YouTube recording in `source_page` and use the manual `run_autoclip` option. AutoClip can consume quota or incur charges, so it stays off by default. Do not enable it until you have checked your account's current pricing and quota.
+
 
 ### Fortnite fan-content notice
 
