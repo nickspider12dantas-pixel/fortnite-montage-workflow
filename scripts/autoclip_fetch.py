@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -11,7 +12,6 @@ BASE_URL = os.environ.get("AUTOCLIP_BASE_URL", "https://polished-turtle-977.conv
 API_KEY = os.environ.get("AUTOCLIP_API_KEY", "").strip()
 SOURCE_FILE = ROOT / "sources.json"
 OUTPUT_FILE = ROOT / "output" / "autoclip_sources.json"
-ALLOWED_CREATORS = {"@realfaxfortnite", "@InstrumentalRemake"}
 MAX_WAIT_SECONDS = 20 * 60
 POLL_SECONDS = 10
 
@@ -57,11 +57,20 @@ def main():
     # cannot waste AutoClip quota.
     music_config = json.loads((ROOT / "music.json").read_text(encoding="utf-8"))
     music_url = str(music_config.get("music_url", "")).strip()
+    music_file = str(music_config.get("music_file", "")).strip()
     license_note = str(music_config.get("license_note", "")).strip()
-    if not music_url.startswith("https://"):
-        raise RuntimeError("Configure music.json with a direct HTTPS download URL for music licensed for this TikTok post before calling AutoClip.")
+    if music_url and not music_url.startswith("https://"):
+        raise RuntimeError("music_url must be blank or a direct HTTPS download URL.")
+    if music_file:
+        local_music = (ROOT / music_file).resolve()
+        if ROOT.resolve() not in local_music.parents:
+            raise RuntimeError("music_file must point to a file inside the repository.")
+        if not local_music.is_file():
+            raise RuntimeError(f"Music file not found: {music_file}. Add a track you are licensed to use.")
+    elif not music_url:
+        raise RuntimeError("Configure music.json with assets/music.mp3 or a direct HTTPS music URL before calling AutoClip.")
     if not license_note:
-        raise RuntimeError("Add the music license/source details to music.json before calling AutoClip.")
+        raise RuntimeError("Add the music track title and license/source details to music.json before calling AutoClip.")
 
     config = json.loads(SOURCE_FILE.read_text(encoding="utf-8"))
     approved = []
@@ -72,8 +81,8 @@ def main():
         creator = (item.get("creator") or "").strip()
         if not source_url.startswith("https://"):
             raise RuntimeError(f"Approved source {index} needs an HTTPS source_page or url.")
-        if creator not in ALLOWED_CREATORS:
-            raise RuntimeError(f"Approved source {index} must identify its verified creator as one of: {', '.join(sorted(ALLOWED_CREATORS))}.")
+        if not re.fullmatch(r"@[A-Za-z0-9._-]{1,30}", creator):
+            raise RuntimeError(f"Approved source {index} needs the correct creator handle (for your own footage, use your own handle, e.g. @yourhandle).")
         approved.append({"url": source_url, "creator": creator, "source_index": index})
 
     if not approved:
