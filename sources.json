@@ -1,39 +1,4 @@
 {
-  "notice": "Source-page links are references only, not downloadable video files. Creator assignments below are based on the user's identification. Use authorized original video files or direct media URLs and confirm permission to edit and repost before setting approved=true.",
-  "clips": [
-    {
-      "source_page": "https://www.youtube.com/shorts/_1mEgm3PXDQ",
-      "url": "",
-      "approved": false,
-      "creator": "@realfaxfortnite"
-    },
-    {
-      "source_page": "https://www.youtube.com/shorts/Jv-SULBwbV0",
-      "url": "",
-      "approved": false,
-      "creator": "@realfaxfortnite"
-    },
-    {
-      "source_page": "https://www.youtube.com/shorts/k--ZgTnI_9Y",
-      "url": "",
-      "approved": false,
-      "creator": "@InstrumentalRemake"
-    },
-    {
-      "source_page": "https://www.youtube.com/shorts/2K9SLY15Z-o",
-      "url": "",
-      "approved": false,
-      "creator": "@InstrumentalRemake"
-    }
-  ],
-  "creator_credits": [
-    {
-      "handle": "@realfaxfortnite",
-      "channel": "https://www.youtube.com/@RealFaxFortnite"
-    },
-    {
-      "handle": "@InstrumentalRemake",
-      "channel": "https://www.youtube.com/@InstrumentalRemake/shorts"
-    }
-  ]
+  "notice": "Use your own Fortnite gameplay recordings or footage whose owner has explicitly permitted submission to AutoClip and editing/reposting. The four third-party Shorts previously listed were removed from the active source list because permission has not been confirmed.",
+  "clips": []
 }
