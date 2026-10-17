@@ -64,16 +64,24 @@ def main():
     music_config = read_json("music.json")
     clips = source_config.get("clips", [])
     music_url = music_config.get("music_url", "").strip()
+    music_file = music_config.get("music_file", "").strip()
+    music_path = None
+    if music_file:
+        music_path = (ROOT / music_file).resolve()
+        if ROOT.resolve() not in music_path.parents:
+            raise ValueError("music_file must point to a file inside the repository.")
+        if not music_path.is_file():
+            raise ValueError(f"Music file not found: {music_file}. Add a licensed MP3 file.")
 
     if len(clips) < 2:
         raise ValueError(
             "Configure at least two authorized direct video-file URLs in sources.json. "
             "YouTube page URLs cannot be used here."
         )
-    if not music_url:
-        raise ValueError(
-            "Set music_url in music.json to a direct download of music licensed for this TikTok post."
-        )
+    if not music_url and music_path is None:
+        raise ValueError("Set music_file to assets/music.mp3 or configure a direct HTTPS music_url in music.json.")
+    if music_url:
+        require_direct_https(music_url, "Licensed music")
 
     for i, clip in enumerate(clips[:6], 1):
         if not clip.get("url", "").strip():
@@ -88,11 +96,8 @@ def main():
                 f"Clip {i} needs approved=true only after verifying permission to download, edit, and repost it."
             )
         creator = clip.get("creator", "").strip()
-        if creator not in ("@realfaxfortnite", "@InstrumentalRemake"):
-            raise ValueError(
-                f"Clip {i} needs creator set to exactly @realfaxfortnite or "
-                "@InstrumentalRemake after checking who made that clip."
-            )
+        if not creator.startswith("@") or len(creator) > 31 or not creator[1:].replace(".", "").replace("_", "").replace("-", "").isalnum():
+            raise ValueError(f"Clip {i} needs the correct creator handle, such as your own @handle.")
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="montage-") as temp_name:
@@ -132,7 +137,10 @@ def main():
         ])
 
         music = temp / "licensed_music.bin"
-        download(music_url, music, "Licensed music")
+        if music_path is not None:
+            music.write_bytes(music_path.read_bytes())
+        else:
+            download(music_url, music, "Licensed music")
         run([
             "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
             "-i", str(joined), "-stream_loop", "-1", "-i", str(music),
