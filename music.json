@@ -1,5 +1,5 @@
 {
-  "notice": "Recommended workflow: download a track from YouTube Studio Audio Library, check its terms for TikTok use, then add the MP3 to assets/music.mp3. Keep the track title and license/source details below. Do not assume a YouTube-only license automatically covers TikTok.",
+  "notice": "Suggested free candidate: “Big Bitty (Techno | Dubstep | EDM | Electronic Music)” by firemansuperhero on Pixabay. Its page states no Content ID and asks for creator credit. Download the MP3 from the official track page to assets/music.mp3, then fill license_note with the title, artist, source URL, Pixabay license, and required credit before running the workflow. Recheck the current track page and terms before use.",
   "music_file": "assets/music.mp3",
   "music_url": "",
   "license_note": ""
