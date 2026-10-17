@@ -71,7 +71,7 @@ jobs:
               ]) >= 2
           ready = footage_ready and music_ready
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"ready={'true' if ready else 'false'}\\n")
+              output.write(f"ready={'true' if ready else 'false'}\n")
           if not ready:
               print("Setup incomplete. No AutoClip jobs will be submitted and no montage will be built.")
               print("Add authorized footage and a licensed music file plus its license note, then run again.")
