@@ -50,16 +50,17 @@ def run(command):
     subprocess.run(command, check=True)
 
 
+def escape_drawtext(text):
+    # Escape characters interpreted by FFmpeg's drawtext filter.
+    return (text.replace("\\", "\\\\").replace(":", "\\:")
+                .replace("'", "\\'").replace("%", "\\%"))
+
+
 def main():
     source_config = read_json("sources.json")
     music_config = read_json("music.json")
     clips = source_config.get("clips", [])
     music_url = music_config.get("music_url", "").strip()
-    creator_handles = [item.get("handle", "").strip() for item in source_config.get("creator_credits", [])]
-    creator_handles = [handle for handle in creator_handles if handle]
-    credit_text = "Credits: " + "  |  ".join(creator_handles) if creator_handles else "Credits: original creators"
-    # Keep the overlay readable and escape the few characters FFmpeg drawtext treats specially.
-    credit_text = credit_text.replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'").replace("%", "\\%")
 
     if len(clips) < 2:
         raise ValueError(
@@ -70,18 +71,23 @@ def main():
         raise ValueError(
             "Set music_url in music.json to a direct download of music licensed for this TikTok post."
         )
-    for i, clip in enumerate(clips, 1):
+
+    for i, clip in enumerate(clips[:6], 1):
         if not clip.get("url", "").strip():
             source = clip.get("source_page", "not provided")
             raise ValueError(
                 f"Clip {i} has a source page ({source}) but no direct video-file URL. "
-                "Ask the creator for an authorized media file or direct HTTPS file URL, "
-                "then set url and approved=true after confirming permission."
+                "Ask the creator for an authorized media file or direct HTTPS file URL."
             )
         require_direct_https(clip.get("url", ""), f"Clip {i}")
         if not clip.get("approved", False):
             raise ValueError(
                 f"Clip {i} needs approved=true only after verifying permission to download, edit, and repost it."
+            )
+        if not clip.get("creator", "").strip():
+            raise ValueError(
+                f"Clip {i} is missing its creator handle. Set creator to @realfaxfortnite "
+                "or @InstrumentalRemake for that specific clip."
             )
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
@@ -92,8 +98,7 @@ def main():
             raw = temp / f"clip_{i}.bin"
             cooked = temp / f"prepared_{i}.mp4"
             download(clip["url"], raw, f"Clip {i}")
-            # Normalize each source to a portrait frame, mute its original audio,
-            # and apply subtle contrast/saturation enhancement.
+            credit_text = escape_drawtext(f"Credit: {clip['creator'].strip()}")
             run([
                 "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
                 "-i", str(raw), "-t", str(CLIP_SECONDS),
@@ -102,7 +107,7 @@ def main():
                 f"crop={WIDTH}:{HEIGHT},eq=contrast=1.08:saturation=1.15:brightness=0.01,"
                 "unsharp=5:5:0.45:3:3:0.0,setsar=1,fps=30,"
                 "drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:"
-                f"text='{credit_text}':fontcolor=white:fontsize=34:"
+                f"text='{credit_text}':fontcolor=white:fontsize=42:"
                 "box=1:boxcolor=black@0.58:boxborderw=14:"
                 "x=(w-text_w)/2:y=h-230,format=yuv420p",
                 "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "21",
