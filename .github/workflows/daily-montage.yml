@@ -39,18 +39,60 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Check setup without making API calls
+        id: readiness
+        env:
+          RUN_AUTOCLIP: ${{ github.event_name == 'workflow_dispatch' && inputs.run_autoclip == true }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(".")
+          sources = json.loads((root / "sources.json").read_text(encoding="utf-8")).get("clips", [])
+          music = json.loads((root / "music.json").read_text(encoding="utf-8"))
+          music_file = str(music.get("music_file", "")).strip()
+          music_url = str(music.get("music_url", "")).strip()
+          license_note = str(music.get("license_note", "")).strip()
+          music_ready = bool(license_note) and (
+              (bool(music_file) and (root / music_file).is_file()) or
+              music_url.startswith("https://")
+          )
+          if os.environ.get("RUN_AUTOCLIP", "").lower() == "true":
+              footage_ready = any(
+                  clip.get("approved") is True and
+                  str(clip.get("source_page") or clip.get("url") or "").startswith("https://")
+                  for clip in sources
+              )
+          else:
+              footage_ready = len([
+                  clip for clip in sources
+                  if clip.get("approved") is True and
+                  str(clip.get("url", "")).startswith("https://")
+              ]) >= 2
+          ready = footage_ready and music_ready
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"ready={'true' if ready else 'false'}\\n")
+          if not ready:
+              print("Setup incomplete. No AutoClip jobs will be submitted and no montage will be built.")
+              print("Add authorized footage and a licensed music file plus its license note, then run again.")
+          else:
+              print("Setup checks passed.")
+          PY
+
       - name: Generate clips with AutoClip (explicit opt-in only)
-        if: github.event_name == 'workflow_dispatch' && inputs.run_autoclip == true
+        if: steps.readiness.outputs.ready == 'true' && github.event_name == 'workflow_dispatch' && inputs.run_autoclip == true
         env:
           AUTOCLIP_API_KEY: ${{ secrets.AUTOCLIP_API_KEY }}
         run: python scripts/autoclip_fetch.py
 
       - name: Build montage
+        if: steps.readiness.outputs.ready == 'true'
         env:
           MONTAGE_SOURCES_FILE: ${{ github.event_name == 'workflow_dispatch' && inputs.run_autoclip == true && 'output/autoclip_sources.json' || 'sources.json' }}
         run: python scripts/build_montage.py
 
       - name: Upload finished montage
+        if: steps.readiness.outputs.ready == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: fortnite-montage-${{ github.run_number }}
