@@ -66,9 +66,18 @@ def main():
             "Set music_url in music.json to a direct download of music licensed for this TikTok post."
         )
     for i, clip in enumerate(clips, 1):
-        if not clip.get("approved", False):
-            raise ValueError(f"Clip {i} must have approved=true after verifying reuse permission.")
+        if not clip.get("url", "").strip():
+            source = clip.get("source_page", "not provided")
+            raise ValueError(
+                f"Clip {i} has a source page ({source}) but no direct video-file URL. "
+                "Ask the creator for an authorized media file or direct HTTPS file URL, "
+                "then set url and approved=true after confirming permission."
+            )
         require_direct_https(clip.get("url", ""), f"Clip {i}")
+        if not clip.get("approved", False):
+            raise ValueError(
+                f"Clip {i} needs approved=true only after verifying permission to download, edit, and repost it."
+            )
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="montage-") as temp_name:
