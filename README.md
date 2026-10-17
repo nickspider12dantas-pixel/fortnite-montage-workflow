@@ -9,6 +9,14 @@ This repository contains a GitHub Actions workflow that uses FFmpeg to build a v
 - It does not publish directly to TikTok or automatically select trending TikTok sounds.
 - The output is saved as a GitHub Actions artifact for 7 days after a successful run.
 
+## AutoClip API integration
+
+The GitHub Actions workflow now submits approved source videos to AutoClip, polls each job, fetches the temporary clip download URLs, and passes those clips to the FFmpeg montage builder. Add the key under **Settings → Secrets and variables → Actions** with the exact name `AUTOCLIP_API_KEY`; never put the key in a repository file.
+
+The integration uses `https://polished-turtle-977.convex.site` and the documented `POST /api/v1/jobs`, `GET /api/v1/jobs/{id}`, and `GET /api/v1/jobs/{id}/clips` endpoints. AutoClip's presigned download URLs may expire after one hour, so the workflow downloads them immediately. Each source is limited to two clips and the montage uses up to six clips total.
+
+Before a source is submitted, set its `approved` value to `true` only if you have permission to submit that video to AutoClip and to edit/repost the resulting clips. The existing four source entries are still `approved: false`, so the workflow will stop safely until you confirm rights for the sources you intend to use. AutoClip may consume account quota or incur charges depending on your plan; check your account's limits before running the workflow. The workflow does not publish to TikTok.
+
 ## Add authorized footage and music
 
 Edit `sources.json` and provide at least two direct HTTPS video-file URLs. Set `approved` to `true` only after you have permission to download, edit, and repost each clip:
