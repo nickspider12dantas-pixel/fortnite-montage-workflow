@@ -110,4 +110,4 @@ Run it on gameplay you recorded or are authorized to edit:
 python scripts/find_highlights.py gameplay.mp4 --top 8 --clip-seconds 7
 ```
 
-It writes `highlights.json` with suggested start times and motion scores. This helper runs locally for free and does not upload the video anywhere. It is separate from the GitHub Actions renderer, which still needs authorized direct media URLs and licensed music configured in `sources.json` and `music.json`.
+It writes `highlights.json` with suggested start times and motion scores. This helper runs locally for free and does not upload the video anywhere. It is separate from the GitHub Actions renderer. The renderer accepts authorized local gameplay files stored under `assets/` or direct HTTPS video-file URLs in `sources.json`; it generates the default soundtrack from `music.json` and `scripts/generate_music.py`.
