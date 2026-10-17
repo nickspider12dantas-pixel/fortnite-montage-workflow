@@ -1,5 +1,5 @@
 {
-  "notice": "These are the two source-page links supplied by the user. They are references only, not downloadable video files. Ask the creator for authorized original video files or direct media URLs before rendering.",
+  "notice": "These are source-page links supplied by the user. They are references only, not downloadable video files. Before rendering, use authorized original video files or direct media URLs from the creators, and confirm rights to edit and repost.",
   "clips": [
     {
       "source_page": "https://www.youtube.com/shorts/_1mEgm3PXDQ",
@@ -8,6 +8,16 @@
     },
     {
       "source_page": "https://www.youtube.com/shorts/Jv-SULBwbV0",
+      "url": "",
+      "approved": false
+    },
+    {
+      "source_page": "https://www.youtube.com/shorts/k--ZgTnI_9Y",
+      "url": "",
+      "approved": false
+    },
+    {
+      "source_page": "https://www.youtube.com/shorts/2K9SLY15Z-o",
       "url": "",
       "approved": false
     }
