@@ -1,5 +1,6 @@
 {
-  "notice": "Use a direct HTTPS download URL for music you are licensed to use on TikTok. Trending TikTok sounds generally cannot be automatically embedded from this workflow.",
+  "notice": "Recommended workflow: download a track from YouTube Studio Audio Library, check its terms for TikTok use, then add the MP3 to assets/music.mp3. Keep the track title and license/source details below. Do not assume a YouTube-only license automatically covers TikTok.",
+  "music_file": "assets/music.mp3",
   "music_url": "",
   "license_note": ""
 }
