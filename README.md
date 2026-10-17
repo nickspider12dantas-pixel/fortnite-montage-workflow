@@ -16,13 +16,13 @@ Edit `sources.json` and provide at least two direct HTTPS video-file URLs. Set `
 ```json
 {
   "clips": [
-    {"url": "https://your-authorized-host.example/clip1.mp4", "approved": true},
-    {"url": "https://your-authorized-host.example/clip2.mp4", "approved": true}
+    {"url": "https://your-authorized-host.example/clip1.mp4", "approved": true, "creator": "@realfaxfortnite"},
+    {"url": "https://your-authorized-host.example/clip2.mp4", "approved": true, "creator": "@InstrumentalRemake"}
   ]
 }
 ```
 
-Replace the example URLs with actual direct media-file URLs. A YouTube watch/Shorts page is not a direct video file and will not work. Use files supplied by the footage owner or official download/export methods you are authorized to use. Permission for the video footage does not automatically clear music embedded in it.
+Replace the example URLs with actual direct media-file URLs. Set each clip’s `creator` to the correct handle for that exact clip; the video overlay will show only that creator as `Clip by @handle`. Do not guess the creator mapping. A YouTube watch/Shorts page is not a direct video file and will not work. Use files supplied by the footage owner or official download/export methods you are authorized to use. Permission for the video footage does not automatically clear music embedded in it.
 
 Edit `music.json` to add a direct download URL for music licensed for use in your TikTok post:
 
