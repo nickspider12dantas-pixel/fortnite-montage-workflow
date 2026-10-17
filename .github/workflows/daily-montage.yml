@@ -80,7 +80,7 @@ jobs:
               output.write(f"ready={'true' if ready else 'false'}\n")
           if not ready:
               print("Setup incomplete. No AutoClip jobs will be submitted and no montage will be built.")
-              print("Add at least two authorized direct video URLs (or enable AutoClip only after checking quota), then run again.")
+              print("Add at least two approved local gameplay files or direct HTTPS video-file URLs, or enable AutoClip only after checking quota, then run again.")
           else:
               print("Setup checks passed.")
           PY
