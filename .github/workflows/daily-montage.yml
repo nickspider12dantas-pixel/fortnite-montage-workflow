@@ -1,0 +1,45 @@
+name: Daily Fortnite montage
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 5:30 PM America/New_York is 21:30 UTC during daylight time.
+    # GitHub cron is UTC, so this shifts by an hour when DST changes.
+    - cron: "30 21 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-fortnite-montage
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          ffmpeg -version | head -n 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build montage
+        run: python scripts/build_montage.py
+
+      - name: Upload finished montage
+        uses: actions/upload-artifact@v4
+        with:
+          name: fortnite-montage-${{ github.run_number }}
+          path: output/montage.mp4
+          if-no-files-found: error
+          retention-days: 7
