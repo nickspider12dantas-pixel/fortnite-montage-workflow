@@ -41,10 +41,10 @@ Replace the example with your own actual unlisted video URL and your real handle
 
 ### Music
 
-1. Browse [Pixabay Music](https://pixabay.com/music/) and select a track whose individual track page and license permit use in social-media videos. Read the official [Pixabay license](https://pixabay.com/service/license-summary/) and the uploader's notes for the specific track.
-2. Avoid tracks marked as Content ID registered if you want fewer automated copyright-claim complications. A free license does not guarantee TikTok will never mute or flag a track.
+1. Suggested candidate: [“Big Bitty (Techno | Dubstep | EDM | Electronic Music)” by firemansuperhero](https://pixabay.com/music/electronic-big-bitty-techno-dubstep-edm-electronic-music-121803/). Its page describes energetic electronic music and says the composer releases music under a Creative Commons Attribution license with no Content ID. It asks users to credit FIREMAN. Re-check the current page and terms before use; this is not a guarantee against TikTok muting or claims.
+2. Read the official [Pixabay license summary](https://pixabay.com/service/license-summary/) and the uploader's notes for the selected track.
 3. Download the MP3 from the official Pixabay track page and add it to the repository at `assets/music.mp3`.
-4. Edit `music.json` and fill `license_note` with the track title, artist, source URL, and license/terms. Do not leave the note blank. Keep a copy of the track page or license details.
+4. Edit `music.json` and fill `license_note` with the track title, artist, source URL, license/terms, and required credit. Do not leave the note blank. Keep a copy of the track page or license details.
 
 The montage builder can use that local MP3 file, so no public direct music URL is required. Do not upload a track if its page or license restricts your intended use.
 
