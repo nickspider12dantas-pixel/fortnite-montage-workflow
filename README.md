@@ -5,7 +5,8 @@ This repository contains a GitHub Actions workflow that uses FFmpeg to build a v
 ## Current status
 
 - The daily workflow and FFmpeg builder are installed.
-- The workflow is **not ready to render a video yet** because no authorized gameplay sources or licensed music file have been added.
+- The workflow generates its own original electronic soundtrack locally, so a music download or paid audio API is not required.
+- The workflow is **not ready to render a video yet** because authorized gameplay footage is still missing.
 - AutoClip is now opt-in only for a manual run. The default is OFF, and the scheduled workflow never submits AutoClip jobs.
 - It does not publish directly to TikTok or automatically select trending TikTok sounds.
 - The output is saved as a GitHub Actions artifact for 7 days after a successful run.
@@ -49,12 +50,10 @@ Use your own gameplay or footage you have permission to edit and repost. Epic's 
 
 ### Music
 
-1. Suggested candidate: [“Big Bitty (Techno | Dubstep | EDM | Electronic Music)” by firemansuperhero](https://pixabay.com/music/electronic-big-bitty-techno-dubstep-edm-electronic-music-121803/). Its page describes energetic electronic music and says the composer releases music under a Creative Commons Attribution license with no Content ID. It asks users to credit FIREMAN. Re-check the current page and terms before use; this is not a guarantee against TikTok muting or claims.
-2. Read the official [Pixabay license summary](https://pixabay.com/service/license-summary/) and the uploader's notes for the selected track.
-3. Download the MP3 from the official Pixabay track page and add it to the repository at `assets/music.mp3`.
-4. Edit `music.json` and fill `license_note` with the track title, artist, source URL, license/terms, and required credit. Do not leave the note blank. Keep a copy of the track page or license details.
+The workflow generates an original electronic instrumental at runtime using `scripts/generate_music.py`. It uses Python's standard library, no third-party samples, no paid API, and no downloaded track. The soundtrack is a functional free default; you can replace it with a licensed track later if you prefer.
 
-The montage builder can use that local MP3 file, so no public direct music URL is required. Do not upload a track if its page or license restricts your intended use.
+A possible replacement is [“Big Bitty (Techno | Dubstep | EDM | Electronic Music)” by firemansuperhero](https://pixabay.com/music/electronic-big-bitty-techno-dubstep-edm-electronic-music-121803/). Its page requests credit to FIREMAN and describes a no-Content-ID approach. Recheck the current track page and terms before use; no track can guarantee TikTok will never mute or flag a video.
+
 
 ## Run the workflow
 
