@@ -69,8 +69,11 @@ jobs:
           else:
               footage_ready = len([
                   clip for clip in sources
-                  if clip.get("approved") is True and
-                  str(clip.get("url", "")).startswith("https://")
+                  if clip.get("approved") is True and (
+                      str(clip.get("url", "")).startswith("https://") or
+                      (str(clip.get("file", "")).strip() and
+                       (root / str(clip.get("file", "")).strip()).is_file())
+                  )
               ]) >= 2
           ready = footage_ready and music_ready
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
