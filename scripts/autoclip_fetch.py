@@ -53,6 +53,16 @@ def find_media_urls(value):
 def main():
     if not API_KEY:
         raise RuntimeError("AUTOCLIP_API_KEY is not set.")
+    # Validate prerequisites before submitting jobs, so missing licensed music
+    # cannot waste AutoClip quota.
+    music_config = json.loads((ROOT / "music.json").read_text(encoding="utf-8"))
+    music_url = str(music_config.get("music_url", "")).strip()
+    license_note = str(music_config.get("license_note", "")).strip()
+    if not music_url.startswith("https://"):
+        raise RuntimeError("Configure music.json with a direct HTTPS download URL for music licensed for this TikTok post before calling AutoClip.")
+    if not license_note:
+        raise RuntimeError("Add the music license/source details to music.json before calling AutoClip.")
+
     config = json.loads(SOURCE_FILE.read_text(encoding="utf-8"))
     approved = []
     for index, item in enumerate(config.get("clips", []), start=1):
