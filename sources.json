@@ -1,25 +1,29 @@
 {
-  "notice": "Source-page links are references only, not downloadable video files. The creator handles below are intended for visible attribution. Before rendering, use authorized original video files or direct media URLs and confirm permission to edit and repost.",
+  "notice": "Source-page links are references only, not downloadable video files. Set creator for each clip to exactly @realfaxfortnite or @InstrumentalRemake only after verifying who created that specific clip. Use authorized original video files or direct media URLs and confirm permission to edit and repost.",
   "clips": [
     {
       "source_page": "https://www.youtube.com/shorts/_1mEgm3PXDQ",
       "url": "",
-      "approved": false
+      "approved": false,
+      "creator": ""
     },
     {
       "source_page": "https://www.youtube.com/shorts/Jv-SULBwbV0",
       "url": "",
-      "approved": false
+      "approved": false,
+      "creator": ""
     },
     {
       "source_page": "https://www.youtube.com/shorts/k--ZgTnI_9Y",
       "url": "",
-      "approved": false
+      "approved": false,
+      "creator": ""
     },
     {
       "source_page": "https://www.youtube.com/shorts/2K9SLY15Z-o",
       "url": "",
-      "approved": false
+      "approved": false,
+      "creator": ""
     }
   ],
   "creator_credits": [
