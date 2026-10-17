@@ -15,7 +15,7 @@ MAX_DOWNLOAD_BYTES = 180 * 1024 * 1024
 
 
 def read_json(name):
-    with (ROOT / name).open("r", encoding="utf-8") as f:
+    path = Path(name)\n    if not path.is_absolute():\n        path = ROOT / path\n    with path.open("r", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -57,7 +57,7 @@ def escape_drawtext(text):
 
 
 def main():
-    source_config = read_json("sources.json")
+    source_config = read_json(os.environ.get("MONTAGE_SOURCES_FILE", "sources.json"))
     music_config = read_json("music.json")
     clips = source_config.get("clips", [])
     music_url = music_config.get("music_url", "").strip()
