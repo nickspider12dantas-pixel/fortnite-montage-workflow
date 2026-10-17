@@ -75,22 +75,37 @@ def main():
 
     if len(clips) < 2:
         raise ValueError(
-            "Configure at least two authorized direct video-file URLs in sources.json. "
-            "YouTube page URLs cannot be used here."
+            "Configure at least two authorized clip entries in sources.json. "
+            "Each entry can use a local file inside the repository or a direct HTTPS video-file URL."
         )
     if not music_url and music_path is None:
         raise ValueError("Set music_file to assets/music.mp3 or configure a direct HTTPS music_url in music.json.")
     if music_url:
         require_direct_https(music_url, "Licensed music")
 
+    local_sources = {}
     for i, clip in enumerate(clips[:6], 1):
-        if not clip.get("url", "").strip():
+        local_file = str(clip.get("file", "")).strip()
+        direct_url = str(clip.get("url", "")).strip()
+        if local_file:
+            local_path = (ROOT / local_file).resolve()
+            if ROOT.resolve() not in local_path.parents:
+                raise ValueError(f"Clip {i} file must point inside the repository.")
+            if not local_path.is_file():
+                raise ValueError(f"Clip {i} local file not found: {local_file}. Add your authorized gameplay file.")
+            if local_path.stat().st_size > MAX_DOWNLOAD_BYTES:
+                raise ValueError(f"Clip {i} local file exceeds the 180 MB limit.")
+            local_sources[i] = local_path
+        elif direct_url:
+            require_direct_https(direct_url, f"Clip {i}")
+        else:
             source = clip.get("source_page", "not provided")
             raise ValueError(
-                f"Clip {i} has a source page ({source}) but no direct video-file URL. "
-                "Ask the creator for an authorized media file or direct HTTPS file URL."
+                f"Clip {i} has no local file or direct HTTPS video-file URL (source page: {source})."
             )
-        require_direct_https(clip.get("url", ""), f"Clip {i}")
+        start_seconds = clip.get("start_seconds", 0)
+        if not isinstance(start_seconds, (int, float)) or start_seconds < 0:
+            raise ValueError(f"Clip {i} start_seconds must be a non-negative number.")
         if not clip.get("approved", False):
             raise ValueError(
                 f"Clip {i} needs approved=true only after verifying permission to download, edit, and repost it."
@@ -104,13 +119,16 @@ def main():
         temp = Path(temp_name)
         prepared = []
         for i, clip in enumerate(clips[:6], 1):
-            raw = temp / f"clip_{i}.bin"
+            raw = local_sources.get(i)
+            if raw is None:
+                raw = temp / f"clip_{i}.bin"
+                download(clip["url"], raw, f"Clip {i}")
             cooked = temp / f"prepared_{i}.mp4"
-            download(clip["url"], raw, f"Clip {i}")
             credit_text = escape_drawtext(f"Clip by {clip['creator'].strip()}")
+            seek_args = ["-ss", str(clip.get("start_seconds", 0))] if float(clip.get("start_seconds", 0)) > 0 else []
             run([
                 "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
-                "-i", str(raw), "-t", str(CLIP_SECONDS),
+                *seek_args, "-i", str(raw), "-t", str(CLIP_SECONDS),
                 "-vf",
                 f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase,"
                 f"crop={WIDTH}:{HEIGHT},eq=contrast=1.08:saturation=1.15:brightness=0.01,"
