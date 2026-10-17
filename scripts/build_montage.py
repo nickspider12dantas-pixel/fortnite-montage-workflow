@@ -55,6 +55,11 @@ def main():
     music_config = read_json("music.json")
     clips = source_config.get("clips", [])
     music_url = music_config.get("music_url", "").strip()
+    creator_handles = [item.get("handle", "").strip() for item in source_config.get("creator_credits", [])]
+    creator_handles = [handle for handle in creator_handles if handle]
+    credit_text = "Credits: " + "  |  ".join(creator_handles) if creator_handles else "Credits: original creators"
+    # Keep the overlay readable and escape the few characters FFmpeg drawtext treats specially.
+    credit_text = credit_text.replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'").replace("%", "\\%")
 
     if len(clips) < 2:
         raise ValueError(
@@ -95,7 +100,11 @@ def main():
                 "-vf",
                 f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=increase,"
                 f"crop={WIDTH}:{HEIGHT},eq=contrast=1.08:saturation=1.15:brightness=0.01,"
-                "unsharp=5:5:0.45:3:3:0.0,setsar=1,fps=30,format=yuv420p",
+                "unsharp=5:5:0.45:3:3:0.0,setsar=1,fps=30,"
+                "drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:"
+                f"text='{credit_text}':fontcolor=white:fontsize=34:"
+                "box=1:boxcolor=black@0.58:boxborderw=14:"
+                "x=(w-text_w)/2:y=h-230,format=yuv420p",
                 "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "21",
                 "-movflags", "+faststart", str(cooked)
             ])
