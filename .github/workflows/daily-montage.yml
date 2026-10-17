@@ -33,7 +33,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Generate clips with AutoClip
+        env:
+          AUTOCLIP_API_KEY: ${{ secrets.AUTOCLIP_API_KEY }}
+        run: python scripts/autoclip_fetch.py
+
       - name: Build montage
+        env:
+          MONTAGE_SOURCES_FILE: output/autoclip_sources.json
         run: python scripts/build_montage.py
 
       - name: Upload finished montage
