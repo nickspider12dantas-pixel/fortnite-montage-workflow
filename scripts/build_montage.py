@@ -84,10 +84,11 @@ def main():
             raise ValueError(
                 f"Clip {i} needs approved=true only after verifying permission to download, edit, and repost it."
             )
-        if not clip.get("creator", "").strip():
+        creator = clip.get("creator", "").strip()
+        if creator not in ("@realfaxfortnite", "@InstrumentalRemake"):
             raise ValueError(
-                f"Clip {i} is missing its creator handle. Set creator to @realfaxfortnite "
-                "or @InstrumentalRemake for that specific clip."
+                f"Clip {i} needs creator set to exactly @realfaxfortnite or "
+                "@InstrumentalRemake after checking who made that clip."
             )
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
@@ -98,7 +99,7 @@ def main():
             raw = temp / f"clip_{i}.bin"
             cooked = temp / f"prepared_{i}.mp4"
             download(clip["url"], raw, f"Clip {i}")
-            credit_text = escape_drawtext(f"Credit: {clip['creator'].strip()}")
+            credit_text = escape_drawtext(f"Clip by {clip['creator'].strip()}")
             run([
                 "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
                 "-i", str(raw), "-t", str(CLIP_SECONDS),
